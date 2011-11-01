@@ -18,7 +18,8 @@ The library utilizes [mpyq](https://github.com/iamteem/mpyq) for replay extracti
 ## Installation
 _comsat_ uses [mpyq](https://github.com/iamteem/mpyq) for extracting and decompressing replays and map files, so you'll need both **python** and **mpyq**.
 
-To install _comsat_ itself, use [npm](http://npmjs.org/):
+To install _comsat_ itself, use [npm](http://npmjs.org/)
+
     npm install comsat
     ^^^^ this will not work yet, I will get this onto npm soon
 
