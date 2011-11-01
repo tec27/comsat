@@ -5,6 +5,7 @@
   "author": "Travis Collins <travis@tec27.com> (http://tec27.com)",
   "dependencies": {
     "bigint": ">= 0.3.7"
+  , "async": ">= 0.1.14"
   },
   "devDependencies": {
     "expresso": ">= 0.9.2",
