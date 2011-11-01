@@ -1,12 +1,11 @@
 ## comsat
 _comsat_ is a [node.js](http://nodejs.org) library for parsing Starcraft 2 replay files.
 
-The library utilizes mpyq for replay extraction, and the parsing is all done through javascript.
+The library utilizes [mpyq](https://github.com/iamteem/mpyq) for replay extraction, and the parsing is all done through javascript.
 
 ## Usage
 
-simple
-------
+###simple
 
     var Replay = require('comsat');
     var rep = new Replay('/path/to/replay.SC2Replay');
