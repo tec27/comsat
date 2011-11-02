@@ -1,9 +1,19 @@
 var comsat = require('comsat')
   , path = require('path')
+  , vows = require('vows')
   , should = require('should')
   , util = require('util')
   , fs = require('fs')
   , comsat_util = require('comsat_util')
+
+// TODO: move these into a utility file
+should.exist = function(obj, msg) {
+  should.ok(obj != null, msg || ('expected ' + util.inspect(obj) + ' to exist'));
+}
+
+should.not.exist = function(obj, msg) {
+  should.ok(obj == null, msg || ('expected ' + util.inspect(obj) + ' to not exist'));
+}
 
 var fixturesDir = path.join(__dirname, 'fixtures');
 
@@ -24,138 +34,123 @@ function repPath(name) {
 }
 // END UTILITY FUNCTIONS
 
-module.exports = {
-    'constructor should set filename': function() {
-      var rep = new comsat.Replay('/my/test/path');
+vows.describe('comsat Integration').addBatch({
+  'Loading an invalid file': {
+    topic: function() { comsat.loadReplay('/my/test/path', false, this.callback) },
 
-      rep.should.have.property('filename');
-      rep.filename.should.equal('/my/test/path');
+    'should give an error': function(err, rep) {
+      should.exist(err);
     },
+  },
+  'Loading a valid file': {
+    topic: function() { comsat.loadReplay(repPath('4v4.SC2Replay'), false, this.callback) },
 
-    'invalid file should return error': function() {
-      comsat.loadReplay('/my/test/path', false, function(err, rep) {
-        should.exist(err);
-      });
+    'should not give an error': function(err, rep) {
+      should.not.exist(err);
     },
+    'should give a Replay object that': {
+      topic: function(rep) { return rep; },
 
-    'valid file should not return error': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        should.not.exist(err);
-      });
-    },
-
-    'deleteFile should mean the replay gets deleted': function() {
-      var origFile = repPath('4v4.SC2Replay');
-      var newFile = path.join('/tmp', comsat_util.generateRandomFilename());
-      copyFile(origFile, newFile, function(err) {
-        if(err)
-          should.fail('Copying replay to new location for testing failed.');
-        else {
-          comsat.loadReplay(newFile, true, function(err, rep) {
-            path.exists(newFile, function(exists) {
-              exists.should.be.false;
-            });
-          });
-        }
-      });
-    },
-
-    'loaded replay should have all data properties set': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
+      'is not null': function(rep) {
+        should.exist(rep);
+      },
+      'has all data properties set': function(rep) {
         rep.should.have.property('info');
         rep.should.have.property('players');
         rep.should.have.property('map');
         rep.should.have.property('messages');
         rep.should.have.property('actions');
-      });
-    },
+      },
+      'has an info property that': {
+        topic: function(rep) { return rep.info },
 
-    'info should have correct game version': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('version');
-        rep.info.version.should.have.property('major').eql(1);
-        rep.info.version.should.have.property('minor').eql(4);
-        rep.info.version.should.have.property('patch').eql(1);
-        rep.info.version.should.have.property('build').eql(19776);
-      });
-    },
+        'has the correct game version': function(info) {
+          info.should.have.property('version');
+          info.version.should.have.property('major').eql(1);
+          info.version.should.have.property('minor').eql(4);
+          info.version.should.have.property('patch').eql(1);
+          info.version.should.have.property('build').eql(19776);
+        },
+        'has the correct game length': function(info) {
+          info.should.have.property('gameLength');
+          info.gameLength.should.eql(14419);
+        },
+        'has the correct region': function(info) {
+          info.should.have.property('region').eql('US');
+        },
+        'has the correct date': function(info) {
+          info.should.have.property('date');
+          info.date.should.have.property('value').eql(1318302653);
+          info.date.should.have.property('timezoneOffset').eql(-14400);
+          (info.date.value + info.date.timezoneOffset).should.eql(1318288253);
+        },
+        'has the correct game format': function(info) {
+          info.should.have.property('format').eql('4v4');
+        },
+        'has the correct game speed': function(info) {
+          info.should.have.property('speed').eql('Faster');
+        },
+        'has the correct number of teams': function(info) {
+          info.should.have.property('teams');
+          should.exist(info.teams);
+          info.teams.should.have.lengthOf(2);
+        },
+        'has the correct team members': function(info) {
+          should.exist(info.teams);
 
-    'info should have correct game length': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('gameLength');
-        rep.info.gameLength.should.eql(14419);
-      });
-    },
+          var team0 = [ 'JetH', 'labi', 'Rhythm', 'Renato' ];
+          var team1 = [ 'tectwoseven', 'Milkis', 'Fedora', 'skindzer' ];
 
-    'info should have correct region': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('region').eql('US');
-      });
-    },
+          for(var i = 0; i < info.teams[0].length; i++) {
+            var player = info.teams[0][i];
+            team0.should.contain(player.name);
+          }
 
-    'info should have correct date': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('date');
-        rep.info.date.should.have.property('value').eql(1318302653);
-        rep.info.date.should.have.property('timezoneOffset').eql(-14400);
-        (rep.info.date.value + rep.info.date.timezoneOffset).should.eql(1318288253);
-      });
-    },
+          for(var i = 0; i < info.teams[1].length; i++) {
+            var player = info.teams[1][i];
+            team1.should.contain(player.name);
+          }
 
-    'info should have correct game format': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('format').eql('4v4');
-      });
-    },
-
-    'info should have correct game speed': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('speed').eql('Faster');
-      });
-    },
-
-    'info should have correct number of teams': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('teams').with.lengthOf(2);
-      });
-    },
-
-    'info should have correct team members': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        var team0 = [ 'JetH', 'labi', 'Rhythm', 'Renato' ];
-        var team1 = [ 'tectwoseven', 'Milkis', 'Fedora', 'skindzer' ];
-
-        for(var i = 0; i < rep.info.teams[0].length; i++) {
-          var player = rep.info.teams[0][i];
-          team0.should.contain(player.name);
+          team0.length.should.eql(info.teams[0].length);
+          team1.length.should.eql(info.teams[1].length);
+        },
+        'has the correct game type': function(info) {
+          info.should.have.property('gameType').eql('AutoMM');
+        },
+        'has the correct recorder': function(info) {
+          info.should.have.property('recordedBy').eql('tectwoseven');
+        },
+        'can convert the game length to seconds correctly': function(info) {
+          info.should.respondTo('gameLengthInSeconds');
+          info.gameLengthInSeconds().should.eql(653);
+        },
+      }, // has info property that
+    } // should give a Replay object that
+  }, // Loading a valid file
+  'Loading a valid file with deletion': {
+    topic: function() { 
+      var origFile = repPath('4v4.SC2Replay');
+      var newFile = path.join('/tmp', comsat_util.generateRandomFilename());
+      var self = this;
+      copyFile(origFile, newFile, function(err) {
+        if(err) {
+          return err;
         }
 
-        for(var i = 0; i < rep.info.teams[1].length; i++) {
-          var player = rep.info.teams[1][i];
-          team1.should.contain(player.name);
-        }
-
-        team0.length.should.eql(rep.info.teams[0].length);
-        team1.length.should.eql(rep.info.teams[1].length);
+        comsat.loadReplay(newFile, true, self.callback);
       });
     },
 
-    'info should have correct game type': function() {
-      comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-        rep.info.should.have.property('gameType').eql('AutoMM');
+    'should not give an error': function(err, rep) {
+      should.not.exist(err);
+    },
+    'should give a non-null Replay object': function(err, rep) {
+      should.exist(rep);
+    },
+    'should delete the file': function(err, rep) {
+      path.exists(rep.filename, function(exists) {
+        exists.should.be.false;
       });
     },
-
-    'info should have correct recorded by': function() {
-        comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-          rep.info.should.have.property('recordedBy').eql('tectwoseven');
-        });
-    },
-
-    'info should return the correct game length seconds conversion': function() {
-        comsat.loadReplay(repPath('4v4.SC2Replay'), false, function(err, rep) {
-          rep.info.should.respondTo('gameLengthInSeconds');
-          rep.info.gameLengthInSeconds().should.eql(653);
-        });
-    },
-};
+  }
+}).export(module);

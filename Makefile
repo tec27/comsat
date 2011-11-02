@@ -1,8 +1,5 @@
 
 test:
-	NODE_PATH=$(NODE_PATH):$(CURDIR)/lib expresso -c test/*.test.js
+	NODE_PATH=$(NODE_PATH):$(CURDIR)/lib $(CURDIR)/node_modules/vows/bin/vows test/*.test.js -v --spec
 
-cov:
-	node-jscoverage lib lib-cov; NODE_PATH=$(NODE_PATH):$(CURDIR)/lib-cov expresso -c test/*.test.js; rm -rf lib-cov
-
-.PHONY: test cov
+.PHONY: test

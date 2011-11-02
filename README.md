@@ -23,3 +23,7 @@ To install _comsat_ itself, use [npm](http://npmjs.org/)
     npm install comsat
     ^^^^ this will not work yet, I will get this onto npm soon
 
+## Testing
+To run the tests, simply run:
+
+    npm test
