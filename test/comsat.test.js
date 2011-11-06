@@ -25,7 +25,7 @@ function repPath(name) {
 }
 // END UTILITY FUNCTIONS
 
-vows.describe('comsat Integration').addBatch({
+vows.describe('comsat integration tests').addBatch({
   'Loading an invalid file': {
     topic: function() { comsat.loadReplay('/my/test/path', false, this.callback) },
 
@@ -116,6 +116,73 @@ vows.describe('comsat Integration').addBatch({
           info.gameLengthInSeconds().should.eql(653);
         },
       }, // has info property that
+      'has a players property that': {
+        topic: function(rep) { return rep.players; },
+
+        'is an array': function(players) {
+          players.should.be.an.instanceof(Array);
+        },
+        'has correct length': function(players) {
+          players.length.should.eql(8);
+        },
+        'contains Player objects': function(players) {
+          players[0].should.be.an.instanceof(comsat.Player);
+        },
+        'has correct player ordering': function(players) {
+          players[0].name.should.eql('JetH');
+          players[1].name.should.eql('labi');
+          players[2].name.should.eql('Rhythm');
+          players[3].name.should.eql('Renato');
+          players[4].name.should.eql('Milkis');
+          players[5].name.should.eql('Fedora');
+          players[6].name.should.eql('tectwoseven');
+          players[7].name.should.eql('skindzer');
+        },
+        'has correct outcomes': function(players) {
+          players[0].isWinner().should.eql(true);
+          players[1].isWinner().should.eql(true);
+          players[2].isWinner().should.eql(true);
+          players[3].isWinner().should.eql(true);
+          players[4].isLoser().should.eql(true);
+          players[5].isLoser().should.eql(true);
+          players[6].isLoser().should.eql(true);
+          players[7].isLoser().should.eql(true);
+        },
+        'has correct color objects': function(players) {
+          players[6].color.should.have.property('argb');
+          players[6].color.argb.alpha.should.eql(255);
+          players[6].color.argb.red.should.eql(22);
+          players[6].color.argb.green.should.eql(128);
+          players[6].color.argb.blue.should.eql(0);
+          players[6].color.should.have.property('name');
+          players[6].color.name.should.eql('Green');
+        },
+        'has correct race objects': function(players) {
+          players[6].race.should.have.property('value').eql('Zerg');
+          players[6].race.should.have.property('random').eql(true);
+          players[0].race.should.have.property('value').eql('Protoss');
+          players[0].race.should.have.property('random').eql(false);
+        },
+        'has correct teams': function(players) {
+          players[0].team.should.eql(0);
+          players[1].team.should.eql(0);
+          players[2].team.should.eql(0);
+          players[3].team.should.eql(0);
+          players[4].team.should.eql(1);
+          players[5].team.should.eql(1);
+          players[6].team.should.eql(1);
+          players[7].team.should.eql(1);
+        },
+        'has correct player type': function(players) {
+          players[7].playerType.should.eql('Human');
+        },
+        'has correct player difficulty': function(players) {
+          players[7].difficulty.should.eql('Medium');
+        },
+        'has correct handicap': function(players) {
+          players[7].handicap.should.eql(100);
+        }
+      }, // has a players property that
     } // should give a Replay object that
   }, // Loading a valid file
   'Loading a valid file with deletion': {
