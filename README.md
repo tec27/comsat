@@ -9,7 +9,7 @@ The library utilizes [mpyq](https://github.com/iamteem/mpyq) for replay extracti
 This code will print a listing of the player slots in this replay. You can do a lot more with comsat, however, see the source, tests and/or `util.inspect` for examples of the kind of data you can pull out (eventually I will have a list here of members for each of the properties on the Replay objects).
 
     var comsat = require('comsat');
-    comsat.loadReplay('/path/to/replay.SC2Replay', false /* deleteFile (true means delete the replay file after parsing */, function(err, rep) {
+    comsat.loadReplay('/path/to/replay.SC2Replay', false /* deleteFile */, function(err, rep) {
         if(err) throw err;
 
         for(var i = 0; i < rep.players.length; i++) {
