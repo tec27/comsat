@@ -1,7 +1,7 @@
 {
   "name": "comsat",
   "description": "Starcraft 2 replay file parsing in node.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Travis Collins <travis@tec27.com> (http://tec27.com)",
   "dependencies": {
     "bigint": ">= 0.3.7"
