@@ -1,19 +1,10 @@
 var comsat = require('comsat')
   , path = require('path')
   , vows = require('vows')
-  , should = require('should')
+  , should = require('./vows-should')(require('should'))
   , util = require('util')
   , fs = require('fs')
   , comsat_util = require('comsat_util')
-
-// TODO: move these into a utility file
-should.exist = function(obj, msg) {
-  should.ok(obj != null, msg || ('expected ' + util.inspect(obj) + ' to exist'));
-}
-
-should.not.exist = function(obj, msg) {
-  should.ok(obj == null, msg || ('expected ' + util.inspect(obj) + ' to not exist'));
-}
 
 var fixturesDir = path.join(__dirname, 'fixtures');
 
