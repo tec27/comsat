@@ -81,6 +81,9 @@ vows.describe('comsat integration tests').addBatch({
         'has the correct game speed': function(info) {
           info.should.have.property('speed').eql('Faster');
         },
+        'has the correct number of players': function(info) {
+          info.should.have.property('numPlayers').eql(8);
+        },
         'has the correct number of teams': function(info) {
           info.should.have.property('teams');
           should.exist(info.teams);
@@ -121,9 +124,6 @@ vows.describe('comsat integration tests').addBatch({
 
         'is an array': function(players) {
           players.should.be.an.instanceof(Array);
-        },
-        'has correct length': function(players) {
-          players.length.should.eql(8);
         },
         'contains Player objects': function(players) {
           players[0].should.be.an.instanceof(comsat.Player);
