@@ -17,7 +17,8 @@ def extract_to_disk(mpq, outdir=None):
         f.close()
     for filename, data in mpq.extract().items():
         f = open(filename, 'wb')
-        f.write(data)
+        if data != None:
+            f.write(data)
         f.close()
 
 if len(sys.argv) < 2:

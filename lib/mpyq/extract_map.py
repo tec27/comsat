@@ -25,7 +25,8 @@ def extract_map(mpq, thumbnail_name=None, outdir=None):
         elif local_regex.match(filename):
             data = mpq.read_file(filename)
             f = open(filename, 'wb')
-            f.write(data)
+            if data != None:
+                f.write(data)
             f.close()
 
 if len(sys.argv) < 2:
