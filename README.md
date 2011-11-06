@@ -27,7 +27,8 @@ _comsat_ uses [mpyq](https://github.com/iamteem/mpyq) for extracting and decompr
 
 You may also need to install some additional dependencies for [node-bigint](https://github.com/substack/node-bigint). See the install guide for more details.
 
-To install _comsat_ itself, use [npm](http://npmjs.org/)
+
+To install _comsat_ itself, use [npm](http://npmjs.org/):
 
     npm install comsat
 
