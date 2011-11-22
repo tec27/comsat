@@ -20,7 +20,7 @@
   },
   "main": "./lib/comsat.js",
   "engines": {
-    "node": ">= 0.4.12"
+    "node": ">= 0.6.0"
   },
   "scripts": {
     "test": "make -i test"
