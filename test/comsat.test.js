@@ -112,7 +112,7 @@ vows.describe('comsat integration tests').addBatch({
           info.should.have.property('gameType').eql('AutoMM');
         },
         'has the correct recorder': function(info) {
-          info.should.have.property('recordedBy').eql('tectwoseven');
+          info.should.have.property('recordedBy').with.property('name').eql('tectwoseven');
         },
         'can convert the game length to seconds correctly': function(info) {
           info.should.respondTo('gameLengthInSeconds');
