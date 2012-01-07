@@ -27,7 +27,7 @@ function repPath(name) {
 
 vows.describe('comsat integration tests').addBatch({
   'Loading an invalid file': {
-    topic: function() { comsat.loadReplay('/my/test/path', false, this.callback) },
+    topic: function() { comsat.loadReplay('/my/test/path', false, this.callback).on('error', function() {}); },
 
     'should give an error': function(err, rep) {
       should.exist(err);
