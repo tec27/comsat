@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "vows": ">= 0.5.12",
+    "mocha": ">= 0.10.2",
     "should": ">= 0.3.2"
   },
   "repository": {

@@ -97,12 +97,12 @@ vows.describe('comsat integration tests').addBatch({
 
           for(var i = 0; i < info.teams[0].length; i++) {
             var player = info.teams[0][i];
-            team0.should.contain(player.name);
+            team0.should.include(player.name);
           }
 
           for(var i = 0; i < info.teams[1].length; i++) {
             var player = info.teams[1][i];
-            team1.should.contain(player.name);
+            team1.should.include(player.name);
           }
 
           team0.length.should.eql(info.teams[0].length);
@@ -115,7 +115,8 @@ vows.describe('comsat integration tests').addBatch({
           info.should.have.property('recordedBy').with.property('name').eql('tectwoseven');
         },
         'can convert the game length to seconds correctly': function(info) {
-          info.should.respondTo('gameLengthInSeconds');
+          should.exist(info.gameLengthInSeconds);
+          info.gameLengthInSeconds.should.be.an.instanceof(Function);
           info.gameLengthInSeconds().should.eql(653);
         },
       }, // has info property that
