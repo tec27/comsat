@@ -115,6 +115,19 @@ describe('Nibbler', function() {
       // ---- ----  AA-- ----          a
       ret[0].should.equal(0x6);
     });
+    it('should be able to read from a shifted state to a non-shifted state across a byte boundary', function() {
+      var buf = new Buffer([0xF0, 0xFA, 0x8E]);
+      var curs = new Cursorize(buf);
+      nib = new Nibbler(curs);
+      nib.readBits(2);
+      var ret = nib.readBits(14);
+      // bits look like:
+      // 1111 0000  1111 1010  1000 1110
+      // AAAA aa--  aaBB bbbb
+      ret.length.should.equal(2);
+      ret[0].should.equal(0xF3);
+      ret[1].should.equal(0x3A);
+    });
   });
 
   describe('readToBoundary', function() {
