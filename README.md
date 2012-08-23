@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/tec27/comsat.png)](http://travis-ci.org/tec27/comsat)
 ## comsat
 _comsat_ is a [node.js](http://nodejs.org) library for parsing Starcraft 2 replay files.
 
